@@ -1,0 +1,32 @@
+/* frontend/pages/contact.css */
+.contact-page-content {
+    background-color: white;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    margin-top: 20px;
+}
+
+.contact-page-content h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #007bff;
+}
+
+.contact-form-container {
+    padding: 20px;
+    background-color: #f0f0f0;
+    border-radius: 5px;
+}
+
+.contact-info {
+    text-align: center;
+    margin-top: 30px;
+    font-size: 1.1em;
+    line-height: 1.8;
+    color: #555;
+}
+
+.contact-info strong {
+    color: #007bff;
+}
