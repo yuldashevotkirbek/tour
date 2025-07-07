@@ -1,0 +1,39 @@
+# tour_firm_project/app.yaml
+
+runtime: python311
+env: standard
+
+entrypoint: gunicorn --bind :$PORT config.wsgi
+
+instance_class: F1 # Bu joy to'g'ri
+# manual_scaling: # Bu qismni avvalgi qadamda olib tashlagan edik, shu holatda qolsin
+#   instances: 1
+
+handlers:
+# Frontendning barcha statik fayllarini xizmat qilish
+# Asosiy index.html uchun
+- url: /
+  static_files: frontend/index.html
+  upload: frontend/index.html
+
+# Barcha frontend fayllari uchun (CSS, JS, images, sahifalar)
+- url: /(.*) # Barcha qolgan URL so'rovlari
+  static_files: frontend/\1
+  upload: frontend/(.*)
+  # Yuqoridagi /static/(.*) va /.* qismlarini endi o'chirib tashlaymiz
+  # Chunki frontend barcha so'rovlarni o'ziga oladi
+
+# Django backend API uchun (bu handler faqat /api/ bilan boshlanadigan so'rovlar uchun ishlaydi)
+# Muhim: Agar yuqoridagi /(.*) handleridan oldin joylashtirsangiz, /api/ so'rovlari statik fayl sifatida izlanadi.
+# Shuning uchun bu eng oxirida bo'lishi kerak yoki /api/ ga maxsus handler yozish kerak.
+# Lekin App Engine'da /.* eng oxirgi handler bo'lishi kerak.
+# Hozirgi holatda, biz frontendni App Engine'ning o'zi orqali xizmat qilayotganimizda,
+# Django API'si /api/ orqali ishlayveradi, chunki bu URL lar frontend tomonidan tan olinmaydi
+# va to'g'ridan-to'g'ri backendga yo'naltiriladi.
+# App Engine default avtomatik tarzda handlerlar tartibiga qaraydi.
+
+env_variables:
+  DJANGO_SETTINGS_MODULE: 'config.settings'
+  SECRET_KEY: 'YOUR_SUPER_SECURE_RANDOM_SECRET_KEY' # O'zingizning maxfiy kalitingizni kiriting
+  # DATABASE_URL: '...' # Agar Cloud SQL ishlatilsa
+  # GS_BUCKET_NAME: '...' # Agar Cloud Storage ishlatilsa
